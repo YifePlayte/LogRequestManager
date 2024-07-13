@@ -1,0 +1,11 @@
+<resources>
+    <string name="allow_device_log_access_request_whitelist">Allow device log access request whitelist</string>
+    <string name="app_name" translatable="false">LogRequestManager</string>
+    <string name="clear">Clear</string>
+    <string name="done">OK</string>
+    <string name="not_support">You seem to be using an outdated version of LSPosed or LSPosed is not active, please update LSPosed or activate it and try again.</string>
+    <string name="search">Search</string>
+    <string name="show_system_applications">Show system applications</string>
+    <string name="warning">Warning</string>
+    <string name="xposed_desc">Manage all device log access requests at once</string>
+</resources>

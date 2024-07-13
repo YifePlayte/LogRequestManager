@@ -1,0 +1,10 @@
+<resources>
+    <string name="allow_device_log_access_request_whitelist" >允许访问设备日志白名单</string>
+    <string name="clear">清空</string>
+    <string name="done">确定</string>
+    <string name="not_support">您似乎正在使用过时的 LSPosed 版本或 LSPosed 未激活，请更新 LSPosed 或者激活后再试。</string>
+    <string name="search">搜索</string>
+    <string name="show_system_applications">显示系统应用</string>
+    <string name="warning">警告</string>
+    <string name="xposed_desc">一站式管理访问设备日志请求</string>
+</resources>
