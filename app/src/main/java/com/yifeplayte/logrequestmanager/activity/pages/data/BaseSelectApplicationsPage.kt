@@ -109,7 +109,8 @@ abstract class BaseSelectApplicationsPage(val key: String) : BasePage() {
                                 )
                             }
                         },
-                        BitmapDrawable(activity.resources, appIconLoader.loadIcon(applicationInfo))
+                        BitmapDrawable(activity.resources, appIconLoader.loadIcon(applicationInfo)),
+                        0f
                     )
                 )
             }
