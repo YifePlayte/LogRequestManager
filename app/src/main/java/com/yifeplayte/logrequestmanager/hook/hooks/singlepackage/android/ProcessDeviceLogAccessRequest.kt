@@ -1,8 +1,10 @@
 package com.yifeplayte.logrequestmanager.hook.hooks.singlepackage.android
 
+import android.os.Message
 import com.github.kyuubiran.ezxhelper.ClassUtils.loadClass
 import com.github.kyuubiran.ezxhelper.HookFactory.`-Static`.createHook
 import com.github.kyuubiran.ezxhelper.Log
+import com.github.kyuubiran.ezxhelper.ObjectUtils.getObjectOrNull
 import com.github.kyuubiran.ezxhelper.ObjectUtils.getObjectOrNullAs
 import com.github.kyuubiran.ezxhelper.ObjectUtils.invokeMethodBestMatch
 import com.github.kyuubiran.ezxhelper.finders.MethodFinder.`-Static`.methodFinder
@@ -15,11 +17,24 @@ object ProcessDeviceLogAccessRequest : BaseHook() {
     override val isEnabled = true
 
     override fun hook() {
-        loadClass("com.android.server.logcat.LogcatManagerService").methodFinder()
-            .filterByName("processNewLogAccessRequest").filterNonAbstract().single().createHook {
-                replace { param ->
-                    val mLogcatManagerService = param.thisObject
-                    val client = param.args[0]!!
+        loadClass("com.android.server.logcat.LogcatManagerService\$LogAccessRequestHandler").methodFinder()
+            .filterByName("handleMessage").filterNonAbstract().single().createHook {
+                before { param ->
+                    val mLogcatManagerService =
+                        getObjectOrNull(param.thisObject, "mService") ?: return@before
+                    val message = param.args[0] as Message
+                    if (message.what != 0) return@before
+                    val request = message.obj
+
+                    val client = invokeMethodBestMatch(
+                        mLogcatManagerService, "getClientForRequest", null, request
+                    ) ?: run {
+                        invokeMethodBestMatch(
+                            mLogcatManagerService, "declineRequest", null, request
+                        )
+                        return@before
+                    }
+
                     val packageName = getObjectOrNullAs<String>(client, "mPackageName")
                     val allowDeviceLogAccessRequestList =
                         getStringSet("allow_device_log_access_request_whitelist", mutableSetOf())
@@ -27,7 +42,8 @@ object ProcessDeviceLogAccessRequest : BaseHook() {
                         if (allowDeviceLogAccessRequestList.contains(packageName)) "onAccessApprovedForClient" else "onAccessDeclinedForClient"
                     invokeMethodBestMatch(mLogcatManagerService, methodName, null, client)
                     Log.i("$methodName called for $packageName")
-                    return@replace null
+
+                    param.result = null
                 }
             }
     }
