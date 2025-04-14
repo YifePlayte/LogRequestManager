@@ -5,6 +5,9 @@
 一站式管理访问设备日志请求  
 Manage all device log access requests at once
 
+⚠ 只应开启你想允许访问所有设备日志的应用的对应开关  
+⚠ Only enable the switch for the application you want to grant access to all device logs
+
 ---
 
 ### 第三方开源引用 / Third-party open source references
